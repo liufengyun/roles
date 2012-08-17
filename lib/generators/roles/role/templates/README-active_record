@@ -1,0 +1,21 @@
+===============================================================================
+
+An initializer file has been created here: config/initializers/roles.rb, you 
+can change roles settings to match your needs. 
+Defaults values are commented out.
+
+A Role class has been been created in app/models (with the name you gave as 
+argument otherwise the default is role.rb), you can add your own business logic 
+inside.
+
+Inside your User class (or the name you gave as argument otherwise the default 
+is user.rb), roles method has been inserted to provide roles methods.
+
+Now, if you just have to run the migration using rake command:
+
+   rake db:migrate
+
+and you will be able to add the resourcify method inside all models you want 
+scoped by a role.
+
+===============================================================================
