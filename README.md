@@ -32,12 +32,13 @@ user.has_role? :moderator, Forum.first # => false
 user.has_role? :moderator, Forum.last  # => false
 
 # query about users
-Forum.users_with_role(role = nil) => returns all users with roles defined on Forum
-forum.users_with_role => returns users with a role defined of current instance
-User.with_role(role, resource = nil) => returns all users with the given role, optionally scoped by Class, instance or non-scoped(globally)
+Forum.users_with_role(role = nil) # => returns all users with roles defined on Forum
+forum.users_with_role(role = nil) # => returns users with a role defined of current instance
+User.with_role(role, resource = nil) # => returns all users with the given role, optionally scoped by Class, instance or non-scoped(globally)
 
 # query about resources
-user.resouces(resource_class, :role_name = nil) => returns all resources of type resource_class for a given user, optionally filtered by role_name.
+user.resouces(resource_class, role_name = nil)
+# => returns all resources of type resource_class for a given user, optionally filtered by role_name.
 
 ```
 
@@ -62,11 +63,11 @@ Add this to your Gemfile and run the +bundle+ command.
 First, create your Role model and migration file using this generator:
 
 ```
-  rails g rolify:role Role User
+  rails g roles:role Role User
 ```
 
 Role and User classes are the default. You can specify any Role class name you want. This is completly a new file so any name can do the job.
-For the User class name, you would probably use the one provided by your authentication solution. rolify just adds some class methods in an existing User class.
+For the User class name, you would probably use the one provided by your authentication solution. Roles just adds some class methods in an existing User class.
 
 
 ### 2. Run the migration
