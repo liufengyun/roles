@@ -1,11 +1,8 @@
 require 'roles/railtie' if defined?(Rails)
 require 'roles/role'
-require 'roles/configure'
 require 'roles/resource'
 
 module Roles
-  extend Configure
-
   attr_accessor :role_cname
   attr_accessor :user_cname
 
@@ -15,7 +12,7 @@ module Roles
     options.reverse_merge!({:role_cname => 'Role'})
 
     roles_options = { :class_name => options[:role_cname].camelize }
-    roles_options.merge!(options.select{ |k,v| [:before_add, :after_add, :before_remove, :after_remove].include? k.to_sym }) if Roles.orm == "active_record"
+    roles_options.merge!(options.select{ |k,v| [:before_add, :after_add, :before_remove, :after_remove].include? k.to_sym })
 
     has_many :roles, roles_options
 

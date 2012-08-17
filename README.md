@@ -1,35 +1,58 @@
-# rolify [![build status](https://secure.travis-ci.org/EppO/rolify.png?branch=master)](http://travis-ci.org/EppO/rolify) [![dependency status](https://gemnasium.com/EppO/rolify.png)](https://gemnasium.com/EppO/rolify)
+# Roles
 
-Very simple Roles library without any authorization enforcement supporting scope on resource object.
+Roles is an extremely simple roles gem inspired by rolify.
 
-Let's see an example: 
+This library is recommended to be used with [CanCan](https://github.com/ryanb/cancan) and [devise](https://github.com/plataformatec/devise).
+
+## Quick Start
 
 ```ruby
-user.has_role?(:moderator, Forum.first) 
-=> false # if user is moderator of another Forum
-```
 
-This library was intended to be used with [CanCan](https://github.com/ryanb/cancan) and [devise](https://github.com/plataformatec/devise) but should be generic enough to be used by any other authentication/authorization solutions.
+# query roles
+user.has_role?(:admin)  # if user is admin globally
+user.has_role?(:admin, Organization)  # if user is admin for Organization type
+user.has_role?(:admin, Organization.first) # if user is not admin of the first organization
+
+# grant roles
+user.add_role(:admin) # a global admin
+user.add_role(:admin, Organization) # admin for type Organization
+user.add_role(:admin, Organization.first) #  admin for the first organization
+
+# revoke roles
+user.remove_role(:admin) # remove global admin
+user.remove_role(:admin, Organization) # remove admin for type Organization
+user.remove_role(:admin, Organization.first) # remove admin for the first organization
+
+# global role DON'T overrides resource role request
+user = User.find(4)
+user.add_role :moderator # sets a global role
+user.has_role? :moderator, Forum # => false
+user.add_role :moderator, Forum # sets a role on resource type
+user.has_role? :moderator, Forum.first # => false
+user.has_role? :moderator, Forum.last  # => false
+
+# query about users
+Forum.users_with_role(role = nil) => returns all users with roles defined on Forum
+forum.users_with_role => returns users with a role defined of current instance
+User.with_role(role, resource = nil) => returns all users with the given role, optionally scoped by Class, instance or non-scoped(globally)
+
+# query about resources
+user.resouces(resource_class, :role_name = nil) => returns all resources of type resource_class for a given user, optionally filtered by role_name.
+
+```
 
 ## Requirements
 
 * Rails >= 3.1
-* ActiveRecord >= 3.1 <b>or</b> Mongoid >= 3.0
+* ActiveRecord >= 3.1
 * supports ruby 1.9, JRuby 1.6.0+ (in 1.9 mode) and Rubinius 2.0.0dev (in 1.9 mode)
-* support of ruby 1.8 has been dropped due to Mongoid 3.0 that only supports 1.9 new hash syntax
 
 ## Installation
 
-In <b>Rails 3</b>, add this to your Gemfile and run the +bundle+ command.
+Add this to your Gemfile and run the +bundle+ command.
 
 ```ruby
-  gem "rolify"
-```
-
-Alternatively, you can install it as a plugin.
-
-```
-  rails plugin install git://github.com/EppO/rolify.git
+  gem "roles"
 ```
 
 ## Getting Started
@@ -45,11 +68,8 @@ First, create your Role model and migration file using this generator:
 Role and User classes are the default. You can specify any Role class name you want. This is completly a new file so any name can do the job.
 For the User class name, you would probably use the one provided by your authentication solution. rolify just adds some class methods in an existing User class.
 
-If you want to use Mongoid instead of ActiveRecord, follow these [instructions](https://github.com/EppO/rolify/wiki/Configuration), and skip to step #3
 
-### 2. Run the migration (only required when using ActiveRecord)
-
-Let's migrate !
+### 2. Run the migration
 
 ```
   rake db:migrate
@@ -57,26 +77,13 @@ Let's migrate !
 
 ### 3.1 Configure your user model
 
-This gem adds the `rolify` method to your User class. You can also specify optional callbacks* on the user for when roles are added or removed:
+This gem adds the `rolify` method to your User class.
 
 ```ruby
   class User < ActiveRecord::Base
-    rolify :before_add => :before_add_method
-
-    def :before_add_method(role)
-      # do something before it gets added
-    end
+    rolify
   end
 ```
-
-The `rolify` method accepts the following callback* options:
-
-- `before_add`
-- `after_add`
-- `before_remove`
-- `after_remove`
-
-*PLEASE NOTE: callbacks are currently only supported using ActiveRecord ORM. Mongoid will support association callbacks in its 3.1 release (Mongoid current version is 3.0.x)
 
 ### 3.2 Configure your resource models
 
@@ -89,114 +96,8 @@ class Forum < ActiveRecord::Base
 end
 ```
 
-### 4. Add a role to a user
-
-To define a global role:
-
-```ruby
-  user = User.find(1)
-  user.add_role :admin
-```
-
-To define a role scoped to a resource instance
-
-```ruby
-  user = User.find(2)
-  user.add_role :moderator, Forum.first
-```
-
-To define a role scoped to a resource class
-
-```ruby
-  user = User.find(3)
-  user.add_role :moderator, Forum
-```
-
-That's it !
-
-### 5. Role queries
-
-To check if a user has a global role: 
-
-```ruby
-  user = User.find(1)
-  user.add_role :admin # sets a global role
-  user.has_role? :admin
-  => true
-```
-
-To check if a user has a role scoped to a resource instance:
-
-```ruby
-  user = User.find(2)
-  user.add_role :moderator, Forum.first # sets a role scoped to a resource instance
-  user.has_role? :moderator, Forum.first
-  => true
-  user.has_role? :moderator, Forum.last
-  => false
-```
-
-To check if a user has a role scoped to a resource class:
-
-```ruby
-  user = User.find(3)
-  user.add_role :moderator, Forum # sets a role scoped to a resource class
-  user.has_role? :moderator, Forum
-  => true
-  user.has_role? :moderator, Forum.first
-  => true
-  user.has_role? :moderator, Forum.last
-  => true
-```
-
-A global role overrides resource role request: 
-
-```ruby
-  user = User.find(4)
-  user.add_role :moderator # sets a global role
-  user.has_role? :moderator, Forum.first
-  => true
-  user.has_role? :moderator, Forum.last
-  => true
-```
-
-### 6. Resource roles querying 
-
-Starting from rolify 3.0, you can search roles on instance level or class level resources.
-
-#### Instance level
-
-```ruby
-  forum = Forum.first
-  forum.roles
-  # => [ list of roles that are only binded to forum instance ]
-  forum.applied_roles
-  # => [ list of roles binded to forum instance and to the Forum class ]
-```
-
-#### Class level
-
-```ruby
-  Forum.with_role(:admin)
-  # => [ list of Forum instances that has role "admin" binded to it ] 
-  Forum.with_role(:admin, current_user)
-  # => [ list of Forum instances that has role "admin" binded to it and belongs to current_user roles ]
-  
-  Forum.find_roles
-  # => [ list of roles that binded to any Forum instance or to the Forum class ]
-  Forum.find_roles(:admin)
-  # => [ list of roles that binded to any Forum instance or to the Forum class with "admin" as a role name ]
-  Forum.find_roles(:admin, current_user)
-  # => [ list of roles that binded to any Forum instance or to the Forum class with "admin" as a role name and belongs to current_user roles ]
-```
-
 ## Resources
 
-* [Wiki](https://github.com/EppO/rolify/wiki)
-* [Usage](https://github.com/EppO/rolify/wiki/Usage): all the available commands
-* [Tutorial](https://github.com/EppO/rolify/wiki/Tutorial): how to use [rolify](http://eppo.github.com/rolify) with [Devise](https://github.com/plataformatec/devise) and [CanCan](https://github.com/ryanb/cancan).
+* [Rolify](https://github.com/EppO/rolify)
 * [Amazing tutorial](http://railsapps.github.com/tutorial-rails-bootstrap-devise-cancan.html) provided by [RailsApps](http://railsapps.github.com/)
 
-## Questions or Problems?
-
-If you have any issue or feature request with/for rolify, please add an [issue on GitHub](https://github.com/EppO/rolify/issues) or fork the project and send a pull request.

@@ -23,14 +23,10 @@ Gem::Specification.new do |s|
     s.add_development_dependency "activerecord-jdbcsqlite3-adapter"
   else
     s.add_development_dependency "sqlite3"
-    s.add_development_dependency "bson_ext" if RUBY_VERSION < "2.0.0"
   end
   s.add_development_dependency "activerecord", ">= 3.1.0"
-  s.add_development_dependency "mongoid", ">= 3.0"
-  s.add_development_dependency "ammeter"
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec", ">= 2.0"
   s.add_development_dependency "rspec-rails", ">= 2.0"
-  s.add_development_dependency "mongoid-rspec", ">= 1.5"
   s.add_development_dependency "bundler" 
 end

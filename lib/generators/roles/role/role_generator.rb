@@ -20,7 +20,6 @@ module Roles
       end
 
       def copy_role_file
-        template "initializer.rb", "config/initializers/roles.rb"
         migration_template "migration.rb", "db/migrate/roles_create_#{role_cname.tableize}" if orm_adapter == "active_record"
       end
 
