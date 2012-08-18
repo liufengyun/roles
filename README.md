@@ -4,6 +4,12 @@ Roles is an extremely simple roles gem inspired by rolify.
 
 This library is recommended to be used with [CanCan](https://github.com/ryanb/cancan) and [devise](https://github.com/plataformatec/devise).
 
+## Why Roles
+
+Look at this discussion: [comment](https://github.com/EppO/rolify/issues/80#issuecomment-7790341)
+
+In a word, Rolify uses two tables `roles` and `users_roles` while Roles only uses one table `roles`.
+
 ## Quick Start
 
 ```ruby
