@@ -43,7 +43,7 @@ forum.users_with_role(role = nil) # => returns users with a role defined of curr
 User.with_role(role, resource = nil) # => returns all users with the given role, optionally scoped by Class, instance or non-scoped(globally)
 
 # query about resources
-user.resouces(resource_class, role_name = nil)
+user.resources(resource_class, role_name = nil)
 # => returns all resources of type resource_class for a given user, optionally filtered by role_name.
 
 ```
