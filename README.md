@@ -1,6 +1,6 @@
 # Roles
 
-Roles is an extremely simple roles gem inspired by rolify.
+Roles is an extremely simple roles gem inspired by [rolify](https://github.com/EppO/rolify).
 
 This library is recommended to be used with [CanCan](https://github.com/ryanb/cancan) and [devise](https://github.com/plataformatec/devise).
 
@@ -18,6 +18,7 @@ In a word, Rolify uses two tables `roles` and `users_roles` while Roles only use
 user.has_role?(:admin)  # if user is admin globally
 user.has_role?(:admin, Organization)  # if user is admin for Organization type
 user.has_role?(:admin, Organization.first) # if user is not admin of the first organization
+user.role_names(instance = nil) # => returns role names of current user, optionally scoped by Class, instance or non-scoped(globally)
 
 # grant roles
 user.add_role(:admin) # a global admin
@@ -43,16 +44,15 @@ forum.users_with_role(role = nil) # => returns users with a role defined of curr
 User.with_role(role, resource = nil) # => returns all users with the given role, optionally scoped by Class, instance or non-scoped(globally)
 
 # query about resources
-user.resources(resource_class, role_name = nil)
-# => returns all resources of type resource_class for a given user, optionally filtered by role_name.
-
+user.resources_with_role(Project, role_name = nil)
+# => returns all projects for a given user, optionally filtered by role_name.
 ```
 
 ## Requirements
 
 * Rails >= 3.1
 * ActiveRecord >= 3.1
-* supports ruby 1.9, JRuby 1.6.0+ (in 1.9 mode) and Rubinius 2.0.0dev (in 1.9 mode)
+* supports ruby 1.9
 
 ## Installation
 
@@ -72,9 +72,7 @@ First, create your Role model and migration file using this generator:
   rails g roles:role Role User
 ```
 
-Role and User classes are the default. You can specify any Role class name you want. This is completly a new file so any name can do the job.
-For the User class name, you would probably use the one provided by your authentication solution. Roles just adds some class methods in an existing User class.
-
+Role and User classes are the default.
 
 ### 2. Run the migration
 
@@ -106,5 +104,6 @@ end
 ## Resources
 
 * [Rolify](https://github.com/EppO/rolify)
+* [CanCan](https://github.com/ryanb/cancan)
 * [Amazing tutorial](http://railsapps.github.com/tutorial-rails-bootstrap-devise-cancan.html) provided by [RailsApps](http://railsapps.github.com/)
 

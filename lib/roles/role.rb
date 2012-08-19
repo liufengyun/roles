@@ -63,7 +63,7 @@ module Roles
       end
     end
 
-    def resources(resource_class, role_name = nil)
+    def resources_with_role(resource_class, role_name = nil)
       if role_name.nil?
         resource_class.joins(:roles).where("roles.#{self.class.user_cname.underscore.singularize}_id = %s", self.id).where("roles.resource_type LIKE '%s'", resource_class.to_s)
       else
