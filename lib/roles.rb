@@ -6,7 +6,7 @@ module Roles
   attr_accessor :role_cname
   attr_accessor :user_cname
 
-  def roles(options = {})
+  def rolify(options = {})
     include Role
     
     options.reverse_merge!({:role_cname => 'Role'})
