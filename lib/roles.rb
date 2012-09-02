@@ -12,7 +12,7 @@ module Roles
     options.reverse_merge!({:role_cname => 'Role'})
     options.reverse_merge!({:user_cname => 'User'})
 
-    roles_options = { :class_name => options[:role_cname].camelize }
+    roles_options = { :class_name => options[:role_cname].camelize, :dependent => :destroy }
     roles_options.merge!(options.select{ |k,v| [:before_add, :after_add, :before_remove, :after_remove].include? k.to_sym })
 
     has_many :roles, roles_options

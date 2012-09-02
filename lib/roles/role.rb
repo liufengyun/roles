@@ -7,11 +7,11 @@ module Roles
     module ClassMethods
       def with_role(role_name, resource = nil)
         if resource.nil?
-          self.joins(:roles).where("roles.name LIKE '%s'", role_name.to_s).where("roles.resource_type IS NULL").where("roles.resource_id IS NULL")
+          self.includes(:roles).where("roles.name LIKE '%s'", role_name.to_s).where("roles.resource_type IS NULL").where("roles.resource_id IS NULL")
         elsif resource.is_a? Class
-          self.joins(:roles).where("roles.name LIKE '%s'", role_name.to_s).where("roles.resource_type = '%s'", resource.to_s).where("roles.resource_id IS NULL")
+          self.includes(:roles).where("roles.name LIKE '%s'", role_name.to_s).where("roles.resource_type LIKE '%s'", resource.to_s).where("roles.resource_id IS NULL")
         else
-          self.joins(:roles).where("roles.name LIKE '%s'", role_name.to_s).where("roles.resource_type = '%s'", resource.to_s).where("roles.resource_id = %s", resource.id)
+          self.includes(:roles).where("roles.name LIKE '%s'", role_name.to_s).where("roles.resource_type LIKE '%s'", resource.class.to_s).where("roles.resource_id = %s", resource.id)
         end
       end
     end
@@ -65,9 +65,9 @@ module Roles
 
     def resources_with_role(resource_class, role_name = nil)
       if role_name.nil?
-        resource_class.joins(:roles).where("roles.#{self.class.user_cname.underscore.singularize}_id = %s", self.id).where("roles.resource_type LIKE '%s'", resource_class.to_s)
+        resource_class.includes(:roles).where("roles.#{self.class.user_cname.underscore.singularize}_id = %s", self.id).where("roles.resource_type LIKE '%s'", resource_class.to_s)
       else
-        resource_class.joins(:roles).where("roles.#{self.class.user_cname.underscore.singularize}_id = %s", self.id).where("roles.resource_type LIKE '%s'", resource_class.to_s).where("roles.name LIKE '%s'", role_name.to_s)
+        resource_class.includes(:roles).where("roles.#{self.class.user_cname.underscore.singularize}_id = %s", self.id).where("roles.resource_type LIKE '%s'", resource_class.to_s).where("roles.name LIKE '%s'", role_name.to_s)
       end
     end
 
