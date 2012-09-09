@@ -46,14 +46,17 @@ describe Roles::Role do
       @admin.add_role :moderator
       @admin.add_role :moderator
       @admin.role_names.should == ["moderator"]
+      Role.where(:name => :moderator).where(:user_id => @admin.id).count.should == 1
 
       @admin.add_role :moderator, Forum
       @admin.add_role :moderator, Forum
       @admin.role_names(Forum).should == ["moderator"]
+      Role.where(:name => :moderator).where(:resource_type => :Forum).where(:resource_id => nil).where(:user_id => @admin.id).count.should == 1
 
       @admin.add_role :moderator, Forum.first
       @admin.add_role :moderator, Forum.first
       @admin.role_names(Forum.first).should == ["moderator"]
+      Role.where(:name => :moderator).where(:resource_type => :Forum).where(:resource_id => Forum.first.id).where(:user_id => @admin.id).count.should == 1
     end
   
     it "should be use grant instead of add_role" do
