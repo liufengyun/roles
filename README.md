@@ -118,3 +118,6 @@ resourcify role_cname: 'MyRole', user_cname: 'MyUser'
 * [CanCan](https://github.com/ryanb/cancan)
 * [Amazing tutorial](http://railsapps.github.com/tutorial-rails-bootstrap-devise-cancan.html) provided by [RailsApps](http://railsapps.github.com/)
 
+## License
+
+Roles is distributed under the MIT-LICENSE.

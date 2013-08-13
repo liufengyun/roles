@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/liufengyun/roles"
   s.summary     = %q{Roles library with resource scoping}
   s.description = %q{An extremely simple roles library inspired by rolify}
+  s.license     = 'MIT'
 
   s.rubyforge_project = s.name
 
