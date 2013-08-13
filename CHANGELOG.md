@@ -1,3 +1,6 @@
+## v0.2.0 (Aug 13, 2013)
+- support custom role and user class name
+
 ## v0.1.0 (Sep 2, 2012)
 - add spec test set
 - fix duplicate records in `resources#users_with_role`, `users#resources_with_role` and `users#with_role`
