@@ -1,4 +1,4 @@
-# Roles
+# Roles [![Build Status](https://travis-ci.org/liufengyun/roles.png?branch=master)](https://travis-ci.org/liufengyun/roles)
 
 Roles is an extremely simple roles gem inspired by [rolify](https://github.com/EppO/rolify).
 
@@ -48,18 +48,17 @@ user.resources_with_role(Project, role_name = nil)
 # => returns all projects for a given user, optionally filtered by role_name.
 ```
 
-## Requirements
+## Compatibility
 
-* Rails >= 3.1
-* ActiveRecord >= 3.1
-* supports ruby 1.9
+* Rails >= 3.1 and < 4.0 (plan to support 4.0 later)
+* supports ruby 1.9 and 2.0
 
 ## Installation
 
 Add this to your Gemfile and run the +bundle+ command.
 
 ```ruby
-  gem "roles"
+gem "roles"
 ```
 
 ## Getting Started
@@ -69,25 +68,31 @@ Add this to your Gemfile and run the +bundle+ command.
 First, create your Role model and migration file using this generator:
 
 ```
-  rails g roles:role Role User
+rails g roles:role
 ```
 
-Role and User classes are the default.
+The command will create a `Role` model and create migrations. Also it will add `rolify` to `User` class.
+
+If you want to use a different name for role and user class, you can specify them as following:
+
+```
+rails g roles:role MyRole MyUser
+```
 
 ### 2. Run the migration
 
 ```
-  rake db:migrate
+rake db:migrate
 ```
 
 ### 3.1 Configure your user model
 
-This gem adds the `rolify` method to your User class.
+This generator automaticaly adds the `rolify` method to your User class.
 
 ```ruby
-  class User < ActiveRecord::Base
-    rolify
-  end
+class User < ActiveRecord::Base
+  rolify
+end
 ```
 
 ### 3.2 Configure your resource models
@@ -99,6 +104,12 @@ For example, on this ActiveRecord class:
 class Forum < ActiveRecord::Base
   resourcify
 end
+```
+
+If you use a different role or user class name than the default `Role` and `User`, you have to specify them as options to the `resourcify` method as following:
+
+``` ruby
+resourcify role_cname: 'MyRole', user_cname: 'MyUser'
 ```
 
 ## Resources
