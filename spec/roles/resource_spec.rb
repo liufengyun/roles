@@ -43,12 +43,12 @@ describe Roles::Resource do
         subject do 
           Group.create(:name => "to delete")
         end
-        
+
         before do
           subject.roles.create :name => "group_role1", :user => admin
           subject.roles.create :name => "group_role2", :user => tourist
         end
-        
+
         it "should remove the roles binded to this instance" do
           expect { subject.destroy }.to change { Role.count }.by(-2)
         end

@@ -168,7 +168,7 @@ describe Roles::Role do
       @admin.roles.create :name => "moderator", :resource_type => "Forum"
       @admin.roles.create :name => "admin", :resource => Forum.first
     end
-    
+
     it "should remove the roles binded to this instance" do
       expect { @admin.destroy }.to change { Role.count }.by(-3)
     end
