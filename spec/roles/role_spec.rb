@@ -2,9 +2,9 @@ require "spec_helper"
 
 describe Roles::Role do
   before do
-    User.rolify :role_cname => "Role"
-    Forum.resourcify :role_cname => "Role"
-    Group.resourcify :role_cname => "Role"
+    User.rolify
+    Forum.resourcify
+    Group.resourcify
     reset_data
 
     @admin = User.first

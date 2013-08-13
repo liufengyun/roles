@@ -15,10 +15,10 @@ module Roles
     roles_options = { :class_name => options[:role_cname].camelize, :dependent => :destroy }
     roles_options.merge!(options.select{ |k,v| [:before_add, :after_add, :before_remove, :after_remove].include? k.to_sym })
 
-    has_many :roles, roles_options
-
     self.role_cname = options[:role_cname]
     self.user_cname = options[:user_cname]
+
+    has_many self.role_table.to_sym, roles_options
   end
 
   def resourcify(options = {})
@@ -26,17 +26,26 @@ module Roles
     
     options.reverse_merge!({ :role_cname => 'Role', :dependent => :destroy, :user_cname => 'User' })
     resourcify_options = { :class_name => options[:role_cname].camelize, :as => :resource, :dependent => options[:dependent] }
-    has_many :roles, resourcify_options
     
     self.role_cname = options[:role_cname]
     self.user_cname = options[:user_cname]
+
+    has_many self.role_table.to_sym, resourcify_options
+  end
+
+  def user_table
+    @user_table ||= self.user_table.tableize
+  end
+
+  def role_table
+    @role_table ||= self.role_cname.tableize
   end
   
   def user_class
-    self.user_cname.constantize
+    @user_class ||= self.user_cname.constantize
   end
 
   def role_class
-    self.role_cname.constantize
+    @role_class ||= self.role_cname.constantize
   end
 end
