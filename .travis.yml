@@ -3,10 +3,10 @@ rvm:
     - ruby-head
     - rbx-19mode
     - jruby-19mode
+    - 2.0.0
 
 env:
     - ADAPTER=active_record
-    - ADAPTER=mongoid
 
 before_install:
   - gem update --system
