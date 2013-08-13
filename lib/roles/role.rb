@@ -18,11 +18,11 @@ module Roles
 
     def add_role(role_name, resource = nil)
       if resource.nil?
-        self.send(self.class.role_table).where(:resource_type => nil).where(:resource_id => nil).find_or_create_by_name(:name => role_name.to_s)
+        self.send(self.class.role_table).where(:resource_type => nil).where(:resource_id => nil).where(:name => role_name.to_s).first_or_create
       elsif resource.is_a? Class
-        self.send(self.class.role_table).where(:resource_type => resource.to_s).where(:resource_id => nil).find_or_create_by_name(:name => role_name.to_s)
+        self.send(self.class.role_table).where(:resource_type => resource.to_s).where(:resource_id => nil).where(:name => role_name.to_s).first_or_create
       else
-        self.send(self.class.role_table).where(:resource_type => resource.class.to_s).where(:resource_id => resource.id).find_or_create_by_name(:name => role_name.to_s)
+        self.send(self.class.role_table).where(:resource_type => resource.class.to_s).where(:resource_id => resource.id).where(:name => role_name.to_s).first_or_create
       end
     end
     alias_method :grant, :add_role
